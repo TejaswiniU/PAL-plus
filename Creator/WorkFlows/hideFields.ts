@@ -1,0 +1,10 @@
+disable Leads_B2C;
+hide Accounts;
+hide Leads_B2C;
+hide Account_Name;
+hide Email;
+hide Lead_Company_Name_same_as_Account_Name;
+//info input.Leads_B2C;
+leadDetails = Leads_B2C[ID == input.Leads_B2C];
+input.Account_Name = leadDetails.Company;
+input.Email = leadDetails.Email;
