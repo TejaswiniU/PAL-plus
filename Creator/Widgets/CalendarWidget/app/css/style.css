@@ -1,0 +1,19 @@
+#calendar {
+    min-height: 700px;
+    min-width: 375px; 
+    position: relative;
+}
+
+.event_bg{
+    border: 4px solid #245132;
+}
+.event_bg_confirm{
+    border: 4px solid #781009;
+}
+/* .event_bg_proposition{
+    border: 4px solid #245132;
+} */
+.event_bg_proposition{
+    border: 4px solid #1a2c41;
+}
+
