@@ -10,10 +10,24 @@
 .event_bg_confirm{
     border: 4px solid #781009;
 }
-/* .event_bg_proposition{
-    border: 4px solid #245132;
-} */
+
 .event_bg_proposition{
-    border: 4px solid #1a2c41;
+    border: 4px solid #b8b8a1;
 }
 
+.palplusLogo
+{
+    width: 30%;
+    height: auto;
+    margin-left: 15%;
+    margin-top: 3%;
+}
+.CloudlionLogo
+{
+    width: 30%;
+    height: auto;
+    margin-right: 7%;
+}
+.LogoDiv{
+    margin-top: 3%;
+}

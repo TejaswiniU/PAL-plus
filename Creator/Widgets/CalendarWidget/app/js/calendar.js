@@ -3,7 +3,6 @@ const StopEventPropagation = (e) => {
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();
 };
-// import { hotelRevenueData } from "./mockData.js";
 
 export const Calendar = (id) => ({
     id: id,
@@ -98,23 +97,23 @@ export const Calendar = (id) => ({
 
                         if (evTime.year() == y && evTime.month() == m && evTime.date() == d) {
                             let availableCount = 0;
-                            if (ev.status == "Available") {
-                                if (categoryValue == "Hôtel - Verso") {
-                                    availableCount = 54 - ev.totalCount;
-                                } else if (categoryValue == "Hôtel Espaces4Saisons") {
-                                    // console.log("ev.total for e4s:"+ev.totalCount);
-                                    availableCount = 82 - ev.totalCount;
-                                } else if (categoryValue == "Bâteau - Escapade Memphrémagog") {
-                                    console.log("ev.total for escapade:" + ev.totalCount);
-                                    availableCount = 176 - ev.totalCount;
-                                } else {
-                                    availableCount = ev.totalCount;
-                                }
-                                console.log("available count for total:" + availableCount);
-                            } else {
-                                console.log("available count with status:" + availableCount);
-                                availableCount = ev.totalCount;
-                            }
+                            // if (ev.status == "Available") {
+                            //     if (categoryValue == "Hôtel - Verso") {
+                            //         availableCount = 54 - ev.totalCount;
+                            //     } else if (categoryValue == "Hôtel Espaces4Saisons") {
+                            //         // console.log("ev.total for e4s:"+ev.totalCount);
+                            //         availableCount = 82 - ev.totalCount;
+                            //     } else if (categoryValue == "Bâteau - Escapade Memphrémagog") {
+                            //         console.log("ev.total for escapade:" + ev.totalCount);
+                            //         availableCount = 176 - ev.totalCount;
+                            //     } else {
+                            //         availableCount = ev.totalCount;
+                            //     }
+                            //     console.log("available count for total:" + availableCount);
+                            // } else {
+                            //     console.log("available count with status:" + availableCount);
+                            //     availableCount = ev.totalCount;
+                            // }
                             let frgEvent = document.createRange().createContextualFragment(`
                              <div time="${ev.ID}" id="${ev.time}" class="event ${ev.cls}">${ev.status}-${ev.totalCount}
                              </div>
@@ -152,7 +151,7 @@ export const Calendar = (id) => ({
             const now = moment();
             const frgCal = document.createRange().createContextualFragment(`
             <div class="calendar noselect p-5">
-            <div id ="selectMon"><label id="monthyearheading">Select Month/Year:</label><i class="fa fa-calendar fa 6" aria-hidden="true"></i>
+            <div id ="selectMon"><label id="monthyearheading">Sélectionnez Mois/Année :</label><i class="fa fa-calendar fa 6" aria-hidden="true"></i>
             <input type="text" name="datepickermy" id="datepickermy" style="display:none"/></div>
                 <div class="month-year-btn d-flex justify-content-center align-items-center mb-2">
                 
@@ -203,9 +202,9 @@ export const Calendar = (id) => ({
             };
             frgCal.querySelector('#selectMon').onclick = () => {
                 $('#dealTable').css("display", "none");
-                // console.log("inside month onclick");
                 var dp = $("#selectMon").datepicker({
                     format: "mm-yyyy",
+                    language: "fr",
                     startView: "months",
                     minViewMode: "months",
                     changeMonth: true,
@@ -215,12 +214,9 @@ export const Calendar = (id) => ({
             frgCal.querySelector('#selectMon').onchange = () => {
                 $('#dealTable').css("display", "none");
                 var selectedDadatepickermyte = $("#datepickermy").val();
-                // console.log(selectedDadatepickermyte);
                 var selectedDateArray = selectedDadatepickermyte.split("-");
-                // console.log(selectedDateArray);
                 var month = selectedDateArray[0].substring(1, selectedDateArray[0].length);
                 var year = selectedDateArray[1];
-                // console.log(month);
                 this.render(year, month - 1);
             };
 
@@ -254,20 +250,25 @@ function getModalData(tableData, noOfRoomsValue,selectedDate) {
     $("#dealTable").find("tr:gt(0)").remove();
     $('#dealTable thead').append('<tr><th>Account Name</th><th>Opportunity Title</th><th>Opportunity Subtitle</th><th>Contact</th><th>Sales Representative</th><th>Arrival Date</th><th>Depature Date</th><th>Created Date</th><th>Status</th><th>No of Rooms</th></tr>');
     $('#dealTable').show();
+    console.log("tabelDAta:"+JSON.stringify(tableData));
     $(tableData).each(function (index, value) {
-        // console.log(value.time);
+        //console.log(value.time);
         var checkStringperdu = "perdu";
         var checkStringconfirm = "confirmé";
         var checkStringproposition = "proposition";
-        var checkStringdispon = "non disponible";
-        var checkStringprospect = "prospect";
+        var checkStringdispon = "Pas de disponibilité";
+        var checkStringprospect = "Prospection";
         var checkStringannule = "annulé";
         var accountName ="";
         var contactName = "";
         var salesRepName ="";
+        var arrivalDate = "";
+        var departureDate ="";
         var noOfRoomsValue = 0;
         var roomsValue = 0;
+        var createdDate = "";
         console.log(value.Income_Category);
+        console.log("opportunity Id:"+value.Zoho_CRM_ID);
         if(value.Income_Category == "Bâteau - Escapade Memphrémagog"){
             console.log("inside if:"+selectedDate);
             if (selectedDate === value.Event_Date) {
@@ -316,34 +317,63 @@ function getModalData(tableData, noOfRoomsValue,selectedDate) {
             var accountName = value.Accounts_B2B.display_value; 
         }
         console.log("inside tabledata");
+        console.log(value.Sales_Stage);
         console.log(noOfRoomsValue);
         if (value.Contacts_B2B != "") {  contactName = value.Contacts_B2B.display_value; }
         if (value.Users_Representative_1 != "") { salesRepName = value.Users_Representative_1.display_value; }
         if (noOfRoomsValue != 0) {  roomsValue = noOfRoomsValue; }
+        if(value.Arrival_Date!=""){arrivalDate = value.Arrival_Date;}
+        if(value.Departure_Date != ""){departureDate = value.Departure_Date;}
+        if(value.Creation_Date !=""){createdDate  = value.Creation_Date;}
+        console.log(salesRepName);
         if (value.Sales_Stage.toUpperCase() === checkStringperdu.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="perdu"><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
-                + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Arrival_Date + '</td><td>' + value.Departure_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + roomsValue + '</td></tr><tr>...</tr>');
+            $('#dealTable tbody').append('<tr class="perdu" id="perduID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+                + contactName + '</td><td>' + salesRepName + '</td><td>' + arrivalDate + '</td><td>' + departureDate + '</td><td>' + createdDate + '</td><td>' + value.Sales_Stage + '</td><td>' + roomsValue + '</td></tr><tr>...</tr>');
         }
         else if (value.Sales_Stage.toUpperCase() === checkStringconfirm.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="confirm"><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
-                + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Arrival_Date + '</td><td>' + value.Departure_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + roomsValue + '</td></tr><tr>...</tr>');
+            $('#dealTable tbody').append('<tr class="confirm"  id="confirmID" ><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+                + contactName + '</td><td>' + salesRepName + '</td><td>' + arrivalDate + '</td><td>' + departureDate + '</td><td>' + createdDate + '</td><td>' + value.Sales_Stage + '</td><td>' + roomsValue + '</td></tr><tr>...</tr>');
         }
         else if (value.Sales_Stage.toUpperCase() === checkStringproposition.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="proposition"><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
-                + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Arrival_Date + '</td><td>' + value.Departure_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + roomsValue + '</td></tr><tr>...</tr>');
+            $('#dealTable tbody').append('<tr class="proposition" id="propositionID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+                + contactName + '</td><td>' + salesRepName + '</td><td>' + arrivalDate + '</td><td>' +departureDate + '</td><td>' + createdDate + '</td><td>' + value.Sales_Stage + '</td><td>' + roomsValue + '</td></tr><tr>...</tr>');
         }
         else if (value.Sales_Stage.toUpperCase() === checkStringdispon.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="pasdedispon"><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
-                + contactName + '</td><td>' + salesRepName + '</td<td>' + value.Arrival_Date + '</td><td>' + value.Departure_Date + '</td>td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + roomsValue + '</td></tr><tr>...</tr>');
+            $('#dealTable tbody').append('<tr class="pasdedispon" id="disponID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+                + contactName + '</td><td>' + salesRepName + '</td><td>' + arrivalDate + '</td><td>' + departureDate + '</td><td>' + createdDate + '</td><td>' + value.Sales_Stage + '</td><td>' + roomsValue + '</td></tr><tr>...</tr>');
         }
         else if (value.Sales_Stage.toUpperCase() === checkStringprospect.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="prospect"><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
-                + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Arrival_Date + '</td><td>' + value.Departure_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + roomsValue + '</td></tr><tr>...</tr>');
+            $('#dealTable tbody').append('<tr class="prospect" id="prospectID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+                + contactName + '</td><td>' + salesRepName + '</td><td>' + arrivalDate + '</td><td>' + departureDate + '</td><td>' + createdDate + '</td><td>' + value.Sales_Stage + '</td><td>' + roomsValue + '</td></tr><tr>...</tr>');
         }
         else if (value.Sales_Stage.toUpperCase() === checkStringannule.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="annule"><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
-                + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Arrival_Date + '</td><td>' + value.Departure_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + roomsValue + '</td></tr><tr>...</tr>');
+            $('#dealTable tbody').append('<tr class="annule" id="annuleID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+                + contactName + '</td><td>' + salesRepName + '</td><td>' + arrivalDate + '</td><td>' + departureDate + '</td><td>' + createdDate + '</td><td>' + value.Sales_Stage + '</td><td>' + roomsValue + '</td></tr><tr>...</tr>');
         }
+    });
+    $("#confirmID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
+    });
+    $("#perduID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
+    });
+    $("#propositionID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
+    });
+    $("#disponID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
+    });
+    $("#prospectID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
+    });
+    $("#annuleID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
     });
 }
 function getModalDataForEscapade(tableData) {
@@ -364,6 +394,10 @@ function getModalDataForEscapade(tableData) {
         var accountName = "";
         var contactName = "";
         var salesRepName = "";
+        var eventDate = "";
+        var createdDate = "";
+        if(value.Event_Date!=""){eventDate = value.Event_Date;}
+        if(value.Creation_Date != ""){createdDate = value.Creation_Date;}
         if (value.Accounts_B2B != "") {
             accountName = value.Accounts_B2B.display_value;
         }
@@ -375,29 +409,53 @@ function getModalDataForEscapade(tableData) {
         }
         console.log("inside escapdate:"+value.Number_of_participants);
         if (value.Sales_Stage.toUpperCase() === checkStringperdu.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="perdu"><td>' + accountName + '</td><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
-                + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Event_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
+            $('#dealTable tbody').append('<tr class="perdu" id="perduID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td><td>' + accountName + '</td><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+                + contactName + '</td><td>' + salesRepName + '</td><td>' + eventDate + '</td><td>' + createdDate + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
         }
         else if (value.Sales_Stage.toUpperCase() === checkStringconfirm.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="confirm"><td>' + accountName + '</td><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
-                + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Event_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
+            $('#dealTable tbody').append('<tr class="confirm" id="confirmID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td><td>' + accountName + '</td><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+                + contactName + '</td><td>' + salesRepName + '</td><td>' + eventDate + '</td><td>' + createdDate + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
         }
         else if (value.Sales_Stage.toUpperCase() === checkStringproposition.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="proposition"><td>' + accountName + '</td><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
-                + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Event_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
+            $('#dealTable tbody').append('<tr class="proposition" id="propositionID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td><td>' + accountName + '</td><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+                + contactName + '</td><td>' + salesRepName + '</td><td>' + eventDate + '</td><td>' + createdDate + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
         }
         else if (value.Sales_Stage.toUpperCase() === checkStringdispon.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="pasdedispon"><td>' + accountName + '</td><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
-                + contactName + '</td><td>' + salesRepName + '</td<td>' + value.Event_Date + '</td>td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
+            $('#dealTable tbody').append('<tr class="pasdedispon" id="disponID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td>><td>' + accountName + '</td><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+                + contactName + '</td><td>' + salesRepName + '</td><td>' + eventDate + '</td><td>' + createdDate + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
         }
         else if (value.Sales_Stage.toUpperCase() === checkStringprospect.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="prospect"><td>' + accountName + '</td><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
-                + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Event_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
+            $('#dealTable tbody').append('<tr class="prospect" id="prospectID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td><td>' + accountName + '</td><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+                + contactName + '</td><td>' + salesRepName + '</td><td>' + eventDate + '</td><td>' + createdDate + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
         }
         else if (value.Sales_Stage.toUpperCase() === checkStringannule.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="annule"><td>' + accountName + '</td><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
-                + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Event_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
+            $('#dealTable tbody').append('<tr class="annule" id="annuleID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td><td>' + accountName + '</td><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+                + contactName + '</td><td>' + salesRepName + '</td><td>' + eventDate + '</td><td>' + createdDate + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
         }
+    });
+    $("#confirmID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
+    });
+    $("#perduID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
+    });
+    $("#propositionID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
+    });
+    $("#disponID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
+    });
+    $("#prospectID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
+    });
+    $("#annuleID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
     });
 }
 function getModalDataForOMG(tableData) {
@@ -431,29 +489,53 @@ function getModalDataForOMG(tableData) {
             salesRepName = value.Users_Representative_1.display_value;
         }
         if (value.Sales_Stage.toUpperCase() === checkStringperdu.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="perdu"><td>' + accountName + '</td><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+            $('#dealTable tbody').append('<tr class="perdu" id="perduID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td><td>' + accountName + '</td><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
                 + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Event_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
         }
         else if (value.Sales_Stage.toUpperCase() === checkStringconfirm.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="confirm"><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+            $('#dealTable tbody').append('<tr class="confirm" id="confirmID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
                 + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Event_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
         }
         else if (value.Sales_Stage.toUpperCase() === checkStringproposition.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="proposition"><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+            $('#dealTable tbody').append('<tr class="proposition" id="propositionID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td>td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
                 + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Event_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
         }
         else if (value.Sales_Stage.toUpperCase() === checkStringdispon.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="pasdedispon"><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
-                + contactName + '</td><td>' + salesRepName + '</td<td>' + value.Event_Date + '</td>td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
+            $('#dealTable tbody').append('<tr class="pasdedispon" id="disponID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+                + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Event_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
         }
         else if (value.Sales_Stage.toUpperCase() === checkStringprospect.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="prospect"><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+            $('#dealTable tbody').append('<tr class="prospect" id="prospectID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
                 + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Event_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
         }
         else if (value.Sales_Stage.toUpperCase() === checkStringannule.toUpperCase()) {
-            $('#dealTable tbody').append('<tr class="annule"><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
+            $('#dealTable tbody').append('<tr class="annule" id="annuleID"><td style="display:none;"><input type="hidden" id="crmID" value="'+value.Zoho_CRM_ID +'"></td><td>' + accountName + '</td>><td>' + value.Opportunity_Title + '</td><td>' + accountName + '</td><td>'
                 + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Event_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
         }
+    });
+    $("#confirmID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
+    });
+    $("#perduID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
+    });
+    $("#propositionID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
+    });
+    $("#disponID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
+    });
+    $("#prospectID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
+    });
+    $("#annuleID").on("click",function(){
+        var crmID = $(this).find("#crmID").val();
+        redirectToCRM(crmID);
     });
 }
 //To populate Table data
@@ -593,4 +675,9 @@ function formatDateToMatchCreator(selectedDate) {
 
 
     return day + "-" + monthlist[month] + "-" + year;
+}
+function redirectToCRM(zohoCRMID){
+    console.log("getOpp ID");
+    var crmURL = "https://crm.zoho.com/crm/org805223710/tab/CustomModule17/"+ zohoCRMID;
+    window.open(crmURL,"_blank");
 }

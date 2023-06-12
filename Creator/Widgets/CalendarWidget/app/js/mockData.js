@@ -63,6 +63,7 @@ export const tableData = [];
 //     },
    
 // ];
+export const hotelRevenuePropositionData = [];
 export const hotelRevenueData = [
 ];
 export const escapadeRevenueData = [

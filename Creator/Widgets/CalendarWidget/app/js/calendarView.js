@@ -47,7 +47,6 @@ $(document).ready(function () {
         fetchOppReveueDetailsForEscapade(categoryValue, serviceValue, "Proposition");
       });
     } else if (categoryValue == "Hôtel - Verso") {
-      $("#calendar").find(".events").innerHTML = "";
       hotelRevenueData.length = 0;
       e4sRevenueData.length = 0;
       $('#serviceDiv').css("display", "none");
