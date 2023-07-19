@@ -70,6 +70,8 @@ export const Calendar = (id) => ({
         console.log(events);
         //this.data ="";
         this.data = events;
+        //this.data = groupAndAddForNonconfirmStatus(events);
+        //groupAndAddForNonconfirmStatus(events);
     },
     clearEvents(emptyEvents){
         this.data =emptyEvents;
@@ -176,7 +178,7 @@ export const Calendar = (id) => ({
             const isSameDate = (d1, d2) => d1.format('YYYY-MM-DD') == d2.format('YYYY-MM-DD');
             let frgWeek;
             d.day(-1); //move date to the oldest Sunday, so that it lines up with the calendar layout
-            for (let i = 0; i < 5; i++) { //loop thru 35 boxes on the calendar month
+            for (let i = 0; i < 6; i++) { //loop thru 35 boxes on the calendar month
                 frgWeek = document.createRange().createContextualFragment(`
                 <ol class="days list-unstyled" week="${d.week()}">
                     <li class="${d.add(1, 'd'), this.m != d.month() ? ' outside' : 'inside'}${isSameDate(d, now) ? ' today' : ''}"><div month="${d.month()}" class="date">${d.format('D')}</div><div class="events"></div></li>
@@ -574,12 +576,12 @@ function getOppportunitiesDetails(categoryValue, selectedDate) {
                 console.log("no matching records found");
                 $('#dealTable').hide();
             }
-            // if (recordsLength == 200) {
-            //   getOppRevenueDetails(parseInt(pageNum) + 1);
-            // }
-            // else {
-            //   console.log("Less than 200");
-            // }
+            if (recordsLength == 200) {
+              getOppRevenueDetails(parseInt(pageNum) + 1);
+            }
+            else {
+              console.log("Less than 200");
+            }
         });
     }
 }
@@ -613,13 +615,13 @@ function getOppportunitiesDetailsForEscapade(categoryValue, selectedDate, servic
                 $('#dealTable').hide();
             }
 
-            // if (recordsLength == 200) {
+            if (recordsLength == 200) {
 
-            //   getOppRevenueDetails(parseInt(pageNum) + 1);
-            // }
-            // else {
-            //   console.log("Less than 200");
-            // }
+              getOppRevenueDetails(parseInt(pageNum) + 1);
+            }
+            else {
+              console.log("Less than 200");
+            }
 
         });
     }
@@ -653,13 +655,13 @@ function getOppportunitiesDetailsForOMG(categoryValue, selectedDate, serviceValu
                 $('#dealTable').hide();
             }
 
-            // if (recordsLength == 200) {
+            if (recordsLength == 200) {
 
-            //   getOppRevenueDetails(parseInt(pageNum) + 1);
-            // }
-            // else {
-            //   console.log("Less than 200");
-            // }
+              getOppRevenueDetails(parseInt(pageNum) + 1);
+            }
+            else {
+              console.log("Less than 200");
+            }
 
         });
     }
@@ -681,3 +683,29 @@ function redirectToCRM(zohoCRMID){
     var crmURL = "https://crm.zoho.com/crm/org805223710/tab/CustomModule17/"+ zohoCRMID;
     window.open(crmURL,"_blank");
 }
+const groupAndAddForNonconfirmStatus = (arr = []) => {
+    const result = new Map();
+    arr.forEach(el => {
+        let item = result.get(el.time) || { time: el.time, totalCount: 0, cls: el.cls, status: el.status,flag:el.flag };
+        //item.time = el.time;
+        item.totalCount = el.totalCount;
+        console.log("item in merging:"+item.length);
+            if(item.flag == "proposition" || item.flag == "Confirm"){
+                console.log("prop/confirm");
+                result.set(item.time, item);
+                console.log("inside prop/confirm:"+result);
+            }
+            // else{
+            //     console.log("inside otherstatus");
+            //     if(item.time == el.time){
+            //         //do nothing
+            //     }else{
+            //         result.set(item.time, item);
+            //     }
+            //     //do nothing
+            // }
+     });
+    console.log("result after merging :"+result);
+    console.log("result after merging length:"+result.size);
+    return result;
+};

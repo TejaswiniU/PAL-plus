@@ -14,8 +14,5 @@ const ready = callback => {
 
 ready(async () => {
 	const cal = Calendar('calendar');
-	console.log("inside main");
-	// console.log(hotelRevenueData);
-	// cal.bindData(hotelRevenueData);
 	cal.render();
 });
