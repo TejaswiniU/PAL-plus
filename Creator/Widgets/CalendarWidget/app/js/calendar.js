@@ -353,27 +353,27 @@ function getModalData(tableData, noOfRoomsValue,selectedDate) {
                 + contactName + '</td><td>' + salesRepName + '</td><td>' + arrivalDate + '</td><td>' + departureDate + '</td><td>' + createdDate + '</td><td>' + value.Sales_Stage + '</td><td>' + roomsValue + '</td></tr><tr>...</tr>');
         }
     });
-    $("#confirmID").on("click",function(){
+    $(".confirm").on("click",function(){
         var crmID = $(this).find("#crmID").val();
         redirectToCRM(crmID);
     });
-    $("#perduID").on("click",function(){
+    $(".perdu").on("click",function(){
         var crmID = $(this).find("#crmID").val();
         redirectToCRM(crmID);
     });
-    $("#propositionID").on("click",function(){
+    $(".proposition").on("click",function(){
         var crmID = $(this).find("#crmID").val();
         redirectToCRM(crmID);
     });
-    $("#disponID").on("click",function(){
+    $(".pasdedispon").on("click",function(){
         var crmID = $(this).find("#crmID").val();
         redirectToCRM(crmID);
     });
-    $("#prospectID").on("click",function(){
+    $(".prospect").on("click",function(){
         var crmID = $(this).find("#crmID").val();
         redirectToCRM(crmID);
     });
-    $("#annuleID").on("click",function(){
+    $(".annule").on("click",function(){
         var crmID = $(this).find("#crmID").val();
         redirectToCRM(crmID);
     });
@@ -435,27 +435,27 @@ function getModalDataForEscapade(tableData) {
                 + contactName + '</td><td>' + salesRepName + '</td><td>' + eventDate + '</td><td>' + createdDate + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
         }
     });
-    $("#confirmID").on("click",function(){
+    $(".confirm").on("click",function(){
         var crmID = $(this).find("#crmID").val();
         redirectToCRM(crmID);
     });
-    $("#perduID").on("click",function(){
+    $(".perdu").on("click",function(){
         var crmID = $(this).find("#crmID").val();
         redirectToCRM(crmID);
     });
-    $("#propositionID").on("click",function(){
+    $(".proposition").on("click",function(){
         var crmID = $(this).find("#crmID").val();
         redirectToCRM(crmID);
     });
-    $("#disponID").on("click",function(){
+    $(".pasdedispon").on("click",function(){
         var crmID = $(this).find("#crmID").val();
         redirectToCRM(crmID);
     });
-    $("#prospectID").on("click",function(){
+    $(".prospect").on("click",function(){
         var crmID = $(this).find("#crmID").val();
         redirectToCRM(crmID);
     });
-    $("#annuleID").on("click",function(){
+    $(".annule").on("click",function(){
         var crmID = $(this).find("#crmID").val();
         redirectToCRM(crmID);
     });
@@ -515,30 +515,31 @@ function getModalDataForOMG(tableData) {
                 + contactName + '</td><td>' + salesRepName + '</td><td>' + value.Event_Date + '</td><td>' + value.Creation_Date + '</td><td>' + value.Sales_Stage + '</td><td>' + value.Number_of_participants + '</td></tr><tr>...</tr>');
         }
     });
-    $("#confirmID").on("click",function(){
-        var crmID = $(this).find("#crmID").val();
-        redirectToCRM(crmID);
-    });
-    $("#perduID").on("click",function(){
-        var crmID = $(this).find("#crmID").val();
-        redirectToCRM(crmID);
-    });
-    $("#propositionID").on("click",function(){
-        var crmID = $(this).find("#crmID").val();
-        redirectToCRM(crmID);
-    });
-    $("#disponID").on("click",function(){
-        var crmID = $(this).find("#crmID").val();
-        redirectToCRM(crmID);
-    });
-    $("#prospectID").on("click",function(){
-        var crmID = $(this).find("#crmID").val();
-        redirectToCRM(crmID);
-    });
-    $("#annuleID").on("click",function(){
-        var crmID = $(this).find("#crmID").val();
-        redirectToCRM(crmID);
-    });
+        $(".confirm").on("click",function(){
+            var crmID = $(this).find("#crmID").val();
+            redirectToCRM(crmID);
+        });
+        $(".perdu").on("click",function(){
+            var crmID = $(this).find("#crmID").val();
+            redirectToCRM(crmID);
+        });
+        $(".proposition").on("click",function(){
+            var crmID = $(this).find("#crmID").val();
+            redirectToCRM(crmID);
+        });
+        $(".pasdedispon").on("click",function(){
+            var crmID = $(this).find("#crmID").val();
+            redirectToCRM(crmID);
+        });
+        $(".prospect").on("click",function(){
+            var crmID = $(this).find("#crmID").val();
+            redirectToCRM(crmID);
+        });
+        $(".annule").on("click",function(){
+            var crmID = $(this).find("#crmID").val();
+            redirectToCRM(crmID);
+        });
+
 }
 //To populate Table data
 function getOppportunitiesDetails(categoryValue, selectedDate) {
