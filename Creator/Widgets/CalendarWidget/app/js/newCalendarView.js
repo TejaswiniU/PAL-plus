@@ -19,7 +19,7 @@ $(document).ready(function () {
         $('#dealTable').css("display", "none");
         var categoryValue = $(this).find(':selected').text();
         var categoryValueID = $(this).find(':selected').val();
-        console.log("categoyrvalue::"+categoryValue);
+        //console.log("categoyrvalue::"+categoryValue);
         if (categoryValue == "Select Category") {
             $('#service').empty();
             $('#serviceDiv').css("display", "none");
@@ -95,16 +95,16 @@ function fetchDealRevenueDetailsOMGTotal(categoryValue, serviceValue, status) {
             pageSize: 200
         }
 
-        console.log(config);
+       // console.log(config);
         var getRecords = ZOHO.CREATOR.API.getAllRecords(config);
-        console.log(getRecords);
+       // console.log(getRecords);
         getRecords.then(function (response) {
-            console.log(response);
-            console.log("respFor Total::" + categoryValue + JSON.stringify(response));
+           // console.log(response);
+           // console.log("respFor Total::" + categoryValue + JSON.stringify(response));
             if (response.code == 3000) {
                 var dataList = JSON.stringify(response.data);
                 var recordsLength = Object.keys(response.data).length;
-                console.log(recordsLength);
+               // console.log(recordsLength);
                 createEventJsonDataOMG(response.data, status);
             } else if (response.code != 3000) {
                 console.log("No matching records found");
@@ -114,15 +114,19 @@ function fetchDealRevenueDetailsOMGTotal(categoryValue, serviceValue, status) {
             if (recordsLength == 200) {
                 getOppRevenueDetails(parseInt(pageNum) + 1);
             }
-            else {
-                console.log("Less than 200");
-            }
+//             else {
+//                 console.log("Less than 200");
+//             }
         }).catch(err => {
-            var emptyData = [];
+            
             console.log("no data exists");
+            if(parseInt(pageNum) == 1)
+            {
+            var emptyData = [];
             var cal = Calendar('calendar');
             cal.bindData(emptyData);
             cal.render();
+            }
 
         });
     }
@@ -135,7 +139,7 @@ function createEventJsonDataOMG(dataList, status) {
     var colorCodingClass = "bg-confirm";
     var totalParticipants = 0;
     $.each(dataList, function (key, value) {
-        console.log(value.Number_of_participants);
+       // console.log(value.Number_of_participants);
         if (value.Event_Date != null) {
             var OMGItem = {};
             OMGItem["ID"] = index;
@@ -151,7 +155,7 @@ function createEventJsonDataOMG(dataList, status) {
     omgData.forEach((values, keys) => {
         OMGRevenueData.push(values);
     });
-    console.log("OMGREvene total:" + OMGRevenueData);
+   // console.log("OMGREvene total:" + OMGRevenueData);
     var cal = Calendar('calendar');
     cal.bindData(OMGRevenueData);
     cal.render();
@@ -210,26 +214,30 @@ function fetchDealRevenueDetailsTotal(categoryValue, status) {
             if (recordsLength == 200) {
                 getOppRevenueDetails(parseInt(pageNum) + 1);
             }
-            else {
-                console.log("Less than 200");
-            }
+//             else {
+//                 console.log("Less than 200");
+//             }
         }).catch(err => {
             console.log(err);
             console.log("no data exists");
+            if(parseInt(pageNum) == 1)
+            {
+            var emptyData = [];
             var cal = Calendar('calendar');
             cal.bindData(emptyData);
             cal.render();
+            }
 
         });
     }
 }
 function createEventJsonDataForTotal(dataList, categoryValue) {
     var totalColorCodingClass = "bg-available";
-    console.log("dataList inside total fn:" + JSON.stringify(dataList));
+   // console.log("dataList inside total fn:" + JSON.stringify(dataList));
     $.each(dataList, function (key, value) {
-        console.log("day1 date:" + value.Date_field);
+        //console.log("day1 date:" + value.Date_field);
         var sameDate = 0;
-        console.log("inside day1 date check");
+       // console.log("inside day1 date check");
         var day1Item = {};
         var day1TotalCount = 0;
         day1Item["ID"] = value.ID;
@@ -241,7 +249,7 @@ function createEventJsonDataForTotal(dataList, categoryValue) {
         hotelRevenueData.push(day1Item);
 
     });
-    console.log("hotelrevenue data for confirme:" + hotelRevenueData);
+   // console.log("hotelrevenue data for confirme:" + hotelRevenueData);
     var cal = Calendar('calendar');
     cal.bindData(hotelRevenueData);
     cal.render();
@@ -261,10 +269,10 @@ function fetchDealRevenueDetailsForProposition(categoryValue, status) {
             page: pageNum,
             pageSize: 200
         }
-        console.log("proposition config:" + JSON.stringify(config));
+       // console.log("proposition config:" + JSON.stringify(config));
         var getRecords = ZOHO.CREATOR.API.getAllRecords(config);
         getRecords.then(function (response) {
-            console.log("respFor Total::" + categoryValue + JSON.stringify(response));
+           // console.log("respFor Total::" + categoryValue + JSON.stringify(response));
             var recordsLength = Object.keys(response.data).length;
             if (response.code == 3000) {
                 createEventJsonDataForProposition(response.data, status);
@@ -274,15 +282,19 @@ function fetchDealRevenueDetailsForProposition(categoryValue, status) {
             if (recordsLength == 200) {
                 getOppRevenueDetails(parseInt(pageNum) + 1);
             }
-            else {
-                console.log("Less than 200");
-            }
+//             else {
+//                 console.log("Less than 200");
+//             }
         }).catch(e => {
             console.log("no data exists:" + e);
             console.log("error in porposition ferch");
+             if(parseInt(pageNum) == 1)
+            {
+            var emptyData = [];
             var cal = Calendar('calendar');
             cal.bindData(emptyData);
             cal.render();
+            }
 
         });
     }
@@ -292,7 +304,7 @@ function createEventJsonDataForProposition(dataList, status) {
     var colorCodingClass = "bg-proposition";
     var eventData = [];
     $.each(dataList, function (key, value) {
-        console.log("day1 date:" + value.Date_field);
+       // console.log("day1 date:" + value.Date_field);
         var sameDate = 0;
         var day1Item = {};
         var day1TotalCount = 0;
@@ -340,9 +352,9 @@ function fetchDealRevenueDetailsForOthers(categoryValue, status) {
             if (recordsLength == 200) {
                 getOppRevenueDetails(parseInt(pageNum) + 1);
             }
-            else {
-                console.log("Less than 200");
-            }
+//             else {
+//                 console.log("Less than 200");
+//             }
         }).catch(e => {
             console.log("no data exists:" + e);
             console.log("error in porposition ferch");
@@ -360,7 +372,7 @@ function populateNonConfirmAvailableData(dataList, categoryValue) {
     }
     $.each(dataList, function (key, value) {
         if (value.Date_field != "") {
-            console.log("Day 1 date:" + value.Date_field);
+           // console.log("Day 1 date:" + value.Date_field);
             var day1Item = {};
             day1Item["ID"] = value.ID;
             day1Item["time"] = value.Date_field;
@@ -398,7 +410,7 @@ function fetchDealRevenueDetailsTotalForEscapade(categoryValue, serviceValue, st
         //  console.log(config);
         var getRecords = ZOHO.CREATOR.API.getAllRecords(config);
         getRecords.then(function (response) {
-            console.log("respFor Total from resultForm::" + categoryValue + JSON.stringify(response));
+           // console.log("respFor Total from resultForm::" + categoryValue + JSON.stringify(response));
             if (response.code == 3000) {
                 var recordsLength = Object.keys(response.data).length;
                 createEventJsonDataForTotalForEscapade(response.data, categoryValue);
@@ -408,16 +420,20 @@ function fetchDealRevenueDetailsTotalForEscapade(categoryValue, serviceValue, st
             if (recordsLength == 200) {
                 getOppEscapadeDetails(parseInt(pageNum) + 1);
             }
-            else {
-                console.log("Less than 200");
-            }
+//             else {
+//                 console.log("Less than 200");
+//             }
         }).catch(err => {
             console.log(err);
             console.log("no data exists");
             // alert("Error message :"+err);
+             if(parseInt(pageNum) == 1)
+            {
+            var emptyData = [];
             var cal = Calendar('calendar');
             cal.bindData(emptyData);
             cal.render();
+            }
 
         });
     }
@@ -467,15 +483,19 @@ function fetchDealReveueTotalForEscapadeProposition(categoryValue, serviceValue,
             if (recordsLength == 200) {
                 getOppEscapadePropositionDetails(parseInt(pageNum) + 1);
             }
-            else {
-              console.log("Less than 200");
-            }
+//             else {
+//               console.log("Less than 200");
+//             }
         }).catch(err => {
             console.log("no data exists");
             //alert("no data exists");
+            if(parseInt(pageNum) == 1)
+            {
+            var emptyData = [];
             var cal = Calendar('calendar');
             cal.bindData(emptyData);
             cal.render();
+            }
 
         });
     }
@@ -518,7 +538,7 @@ function fetchDealRevenueDetailsForOthersEscapade(categoryValue, serviceValue) {
         }
         var getRecords = ZOHO.CREATOR.API.getAllRecords(otherStatusConfig);
         getRecords.then(function (response) {
-            console.log("respFor Total::" + categoryValue + JSON.stringify(response));
+          //  console.log("respFor Total::" + categoryValue + JSON.stringify(response));
             if (response.code == 3000) {
                 var recordsLength = Object.keys(response.data).length;
                 populateNonConfirmAvailableDataForEScapade(response.data);
@@ -528,9 +548,9 @@ function fetchDealRevenueDetailsForOthersEscapade(categoryValue, serviceValue) {
             if (recordsLength == 200) {
                 getOppEscapadeOtherDetails(parseInt(pageNum) + 1);
             }
-            else {
-                console.log("Less than 200");
-            }
+//             else {
+//                 console.log("Less than 200");
+//             }
         }).catch(e => {
             console.log("no data exists:" + e);
             console.log("error in porposition ferch");
@@ -548,7 +568,7 @@ function populateNonConfirmAvailableDataForEScapade(dataList) {
             day1Item["status"] = "Available";
             day1Item["cls"] = colorCodingClass;
             day1Item["totalCount"] = value.Total_No_of_Rooms;
-            console.log(day1Item);
+            //console.log(day1Item);
             escapadeRevenueData.push(day1Item);
         }
     });
